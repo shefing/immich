@@ -1,13 +1,16 @@
-import { AssetFaceId, IPersonRepository, PersonSearchOptions, UpdateFacesData } from '@app/domain';
+import { AlbumAssetCount, AssetFaceId, IPersonRepository, PersonSearchOptions, UpdateFacesData } from '@app/domain';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { AssetEntity, AssetFaceEntity, PersonEntity } from '../entities';
+import { AlbumEntity, AssetEntity, AssetFaceEntity, PersonEntity } from '../entities';
+
+const peopleLimit = Number(process.env.PEOPLE_LIMIT);
 
 export class PersonRepository implements IPersonRepository {
   constructor(
     @InjectRepository(AssetEntity) private assetRepository: Repository<AssetEntity>,
     @InjectRepository(PersonEntity) private personRepository: Repository<PersonEntity>,
     @InjectRepository(AssetFaceEntity) private assetFaceRepository: Repository<AssetFaceEntity>,
+    @InjectRepository(AlbumEntity) private albumRepository: Repository<AlbumEntity>,
   ) {}
 
   /**
@@ -74,7 +77,7 @@ export class PersonRepository implements IPersonRepository {
       .addOrderBy("NULLIF(person.name, '')", 'ASC', 'NULLS LAST')
       .having("person.name != '' OR COUNT(face.assetId) >= :faces", { faces: options?.minimumFaceCount || 1 })
       .groupBy('person.id')
-      .limit(500);
+      .limit(peopleLimit);
     if (!options?.withHidden) {
       queryBuilder.andWhere('person.isHidden = false');
     }
@@ -127,6 +130,25 @@ export class PersonRepository implements IPersonRepository {
       // TODO: remove after either (1) pagination or (2) time bucket is implemented for this query
       take: 1000,
     });
+  }
+
+  async getAlbums(personId: string): Promise<AlbumAssetCount[]> {
+    const countByAlbums = await this.albumRepository
+    .createQueryBuilder('album')
+    .select('album.id')
+    .addSelect('COUNT(albums_assets.assetsId)', 'asset_count')
+    .innerJoin('albums_assets_assets', 'albums_assets', 'albums_assets.albumsId = album.id')
+    .innerJoin('asset_faces', 'asset_faces', 'asset_faces.assetId = albums_assets.assetId')
+    .innerJoin('person', 'person', 'asset_faces.personId = person.id')
+    .where('person.id = :personId', { personId })
+    .groupBy('person.id, album.name')
+    .orderBy('person.id, album.name')
+    .getRawMany();
+
+    return countByAlbums.map<AlbumAssetCount>((albumCount) => ({
+      albumId: albumCount['album_id'],
+      assetCount: Number(albumCount['asset_count']),
+    }));
   }
 
   create(entity: Partial<PersonEntity>): Promise<PersonEntity> {
