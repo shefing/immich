@@ -247,10 +247,6 @@ class ApiClient {
           return CQModeTypeTransformer().decode(value);
         case 'ChangePasswordDto':
           return ChangePasswordDto.fromJson(value);
-        case 'CheckDuplicateAssetDto':
-          return CheckDuplicateAssetDto.fromJson(value);
-        case 'CheckDuplicateAssetResponseDto':
-          return CheckDuplicateAssetResponseDto.fromJson(value);
         case 'CheckExistingAssetsDto':
           return CheckExistingAssetsDto.fromJson(value);
         case 'CheckExistingAssetsResponseDto':
@@ -349,6 +345,8 @@ class ApiClient {
           return PeopleUpdateItem.fromJson(value);
         case 'PersonResponseDto':
           return PersonResponseDto.fromJson(value);
+        case 'PersonStatisticsResponseDto':
+          return PersonStatisticsResponseDto.fromJson(value);
         case 'PersonUpdateDto':
           return PersonUpdateDto.fromJson(value);
         case 'QueueStatusDto':
@@ -385,6 +383,8 @@ class ApiClient {
           return ServerPingResponse.fromJson(value);
         case 'ServerStatsResponseDto':
           return ServerStatsResponseDto.fromJson(value);
+        case 'ServerThemeDto':
+          return ServerThemeDto.fromJson(value);
         case 'ServerVersionResponseDto':
           return ServerVersionResponseDto.fromJson(value);
         case 'SharedLinkCreateDto':
@@ -409,6 +409,8 @@ class ApiClient {
           return SystemConfigMachineLearningDto.fromJson(value);
         case 'SystemConfigMapDto':
           return SystemConfigMapDto.fromJson(value);
+        case 'SystemConfigNewVersionCheckDto':
+          return SystemConfigNewVersionCheckDto.fromJson(value);
         case 'SystemConfigOAuthDto':
           return SystemConfigOAuthDto.fromJson(value);
         case 'SystemConfigPasswordLoginDto':
@@ -419,6 +421,8 @@ class ApiClient {
           return SystemConfigStorageTemplateDto.fromJson(value);
         case 'SystemConfigTemplateStorageOptionDto':
           return SystemConfigTemplateStorageOptionDto.fromJson(value);
+        case 'SystemConfigThemeDto':
+          return SystemConfigThemeDto.fromJson(value);
         case 'SystemConfigThumbnailDto':
           return SystemConfigThumbnailDto.fromJson(value);
         case 'SystemConfigTrashDto':
