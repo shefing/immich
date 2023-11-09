@@ -17,6 +17,8 @@
   let assetData: string;
   let abortController: AbortController;
   let hasZoomed = false;
+  let showpeopleFrame = false;
+  let peopleFrameData: { imageHeight: 0; imageWidth: 0; x1: 0; x2: 0; y1: 0; y2: 0 };
   let copyImageToClipboard: (src: string) => Promise<Blob>;
   let canCopyImagesToClipboard: () => boolean;
 
@@ -115,6 +117,12 @@
       wheelZoomRatio: 0.2,
     });
   }
+
+  export const handlePeopleHover = (ev: any) => {
+    showpeopleFrame = true;
+    peopleFrameData = ev.detail;
+    console.log('handlePeopleHover', peopleFrameData);
+  };
 </script>
 
 <svelte:window on:keydown={handleKeypress} on:copyImage={doCopy} on:zoomImage={doZoomImage} />
@@ -128,6 +136,16 @@
     <LoadingSpinner />
   {:then}
     <div bind:this={imgElement} class="h-full w-full">
+      {#if showpeopleFrame}
+        <div
+          style={`position: absolute; border: solid 10px red; border-radius: 40px;
+                  top:${peopleFrameData.y1}px;
+                  left:${peopleFrameData.x1}px;
+                  height:${peopleFrameData.imageHeight}px;
+                  width:${peopleFrameData.imageWidth}px;`}
+        />
+      {/if}
+
       <img
         transition:fade={{ duration: haveFadeTransition ? 150 : 0 }}
         src={assetData}

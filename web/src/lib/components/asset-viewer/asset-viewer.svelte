@@ -90,6 +90,7 @@
   let isShowActivity = false;
   let isLiked: ActivityResponseDto | null = null;
   let numberOfComments: number;
+  let photoViewer: PhotoViewer;
 
   $: {
     if (asset.stackCount && asset.stack) {
@@ -625,7 +626,12 @@
     {#if previewStackedAsset}
       {#key previewStackedAsset.id}
         {#if previewStackedAsset.type === AssetTypeEnum.Image}
-          <PhotoViewer asset={previewStackedAsset} on:close={closeViewer} haveFadeTransition={false} />
+          <PhotoViewer
+            asset={previewStackedAsset}
+            on:close={closeViewer}
+            haveFadeTransition={false}
+            bind:this={photoViewer}
+          />
         {:else}
           <VideoViewer
             assetId={previewStackedAsset.id}
@@ -657,7 +663,7 @@
                 .endsWith('.insp'))}
             <PanoramaViewer {asset} />
           {:else}
-            <PhotoViewer {asset} on:close={closeViewer} />
+            <PhotoViewer {asset} on:close={closeViewer} bind:this={photoViewer} />
           {/if}
         {:else}
           <VideoViewer
@@ -738,6 +744,7 @@
         on:close-viewer={handleCloseViewer}
         on:description-focus-in={disableKeyDownEvent}
         on:description-focus-out={enableKeyDownEvent}
+        on:peopleHover={photoViewer.handlePeopleHover}
       />
     </div>
   {/if}

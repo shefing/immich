@@ -3,7 +3,7 @@
   import { locale } from '$lib/stores/preferences.store';
   import { featureFlags, serverConfig } from '$lib/stores/server-config.store';
   import { getAssetFilename } from '$lib/utils/asset-utils';
-  import { AlbumResponseDto, AssetResponseDto, ThumbnailFormat, api } from '@api';
+  import { AlbumResponseDto, AssetResponseDto, ExpandedPersonResponseDto, ThumbnailFormat, api } from '@api';
   import type { LatLngTuple } from 'leaflet';
   import { DateTime } from 'luxon';
   import { createEventDispatcher } from 'svelte';
@@ -87,6 +87,18 @@
       console.error(error);
     }
   };
+
+  const handlePeopleHover = (person: ExpandedPersonResponseDto) => {
+    const data = {
+      imageWidth: person.imageWidth,
+      imageHeight: person.imageHeight,
+      x1: person.x1,
+      x2: person.x2,
+      y1: person.y2,
+      y2: person.y2,
+    };
+    dispatch('peopleHover', data);
+  };
 </script>
 
 <section class="p-2 dark:bg-immich-dark-bg dark:text-immich-dark-fg">
@@ -135,7 +147,13 @@
 
       <div class="mt-4 flex flex-wrap gap-2">
         {#each people as person (person.id)}
-          <a href="/people/{person.id}" class="w-[90px]" on:click={() => dispatch('close-viewer')}>
+          <a
+            href="/people/{person.id}"
+            class="w-[90px]"
+            on:click={() => dispatch('close-viewer')}
+            on:focus={() => handlePeopleHover(person)}
+            on:mouseover={() => handlePeopleHover(person)}
+          >
             <ImageThumbnail
               curve
               shadow
