@@ -140,9 +140,9 @@
         <div
           style={`position: absolute; border: solid 10px red; border-radius: 40px;
                   top:${peopleFrameData.y1}px;
-                  left:${peopleFrameData.x1}px;
-                  height:${peopleFrameData.imageHeight}px;
-                  width:${peopleFrameData.imageWidth}px;`}
+                  left:${peopleFrameData.x1 / 1.5}px;
+                  height:${peopleFrameData.imageHeight / 3}px;
+                  width:${peopleFrameData.imageWidth / 4}px;`}
         />
       {/if}
 
