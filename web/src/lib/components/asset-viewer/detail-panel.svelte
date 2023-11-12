@@ -94,7 +94,7 @@
       imageHeight: person.imageHeight,
       x1: person.x1,
       x2: person.x2,
-      y1: person.y2,
+      y1: person.y1,
       y2: person.y2,
     };
     dispatch('peopleHover', data);
