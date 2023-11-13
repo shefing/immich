@@ -655,61 +655,61 @@
                   {album.description || 'Add description'}
                 </button>
               {/if}
-          <div class="namedUnNamedWrapper">
-            {#if namedPeoples.length}
-              <div class="personsWrapper">
-                {#each namedPeoples as people}
-                  {#if !personId || personId === people.personId}
-                    <div class={personId ? 'cancelWrapper' : 'personFilterWrapper'}>
-                      <a href="/people/{people.personId}">
-                        <ImageThumbnail
-                          circle
-                          shadow
-                          url={api.getPeopleThumbnailUrl(people.personId)}
-                          altText={people.personName}
-                          title={`${people.personName}\nin ${people.albumCount} ${
-                            people.albumCount > 1 ? 'albums' : 'album'
-                          }`}
-                          widthStyle="3.375rem"
-                          heightStyle="3.375rem"
-                        />
-                      </a>
-                      <button
-                        class={personId ? 'cancelFilterBtn' : 'personNameFilterBtn'}
-                        title={`🔎 ${people.personName}`}
-                        on:click={() => (personId ? handleResetFilter() : handleFiterByPeople(people.personId))}
-                        >{people.personName}
-                        {#if personId}
-                          <Icon path={mdiCloseCircle} size="18" />
-                        {/if}
-                      </button>
-                    </div>
-                  {/if}
-                {/each}
+              <div class="namedUnNamedWrapper">
+                {#if namedPeoples.length}
+                  <div class="personsWrapper">
+                    {#each namedPeoples as people}
+                      {#if !personId || personId === people.personId}
+                        <div class={personId ? 'cancelWrapper' : 'personFilterWrapper'}>
+                          <a href="/people/{people.personId}">
+                            <ImageThumbnail
+                              circle
+                              shadow
+                              url={api.getPeopleThumbnailUrl(people.personId)}
+                              altText={people.personName}
+                              title={`${people.personName}\nin ${people.albumCount} ${
+                                people.albumCount > 1 ? 'albums' : 'album'
+                              }`}
+                              widthStyle="3.375rem"
+                              heightStyle="3.375rem"
+                            />
+                          </a>
+                          <button
+                            class={personId ? 'cancelFilterBtn' : 'personNameFilterBtn'}
+                            title={`🔎 ${people.personName}`}
+                            on:click={() => (personId ? handleResetFilter() : handleFiterByPeople(people.personId))}
+                            >{people.personName}
+                            {#if personId}
+                              <Icon path={mdiCloseCircle} size="18" />
+                            {/if}
+                          </button>
+                        </div>
+                      {/if}
+                    {/each}
+                  </div>
+                {/if}
+                {#if unNamedPeoples.length}
+                  <div class="personsWrapper">
+                    {#each unNamedPeoples as people}
+                      {#if !personId || personId === people.personId}
+                        <div class="personFilterWrapper">
+                          <a href="/people/{people.personId}">
+                            <ImageThumbnail
+                              circle
+                              shadow
+                              url={api.getPeopleThumbnailUrl(people.personId)}
+                              altText={people.personName}
+                              title={`in ${people.albumCount} ${people.albumCount > 1 ? 'albums' : 'album'}`}
+                              widthStyle="3.375rem"
+                              heightStyle="3.375rem"
+                            />
+                          </a>
+                        </div>
+                      {/if}
+                    {/each}
+                  </div>
+                {/if}
               </div>
-            {/if}
-            {#if namedPeoples.length}
-              <div class="personsWrapper">
-                {#each unNamedPeoples as people}
-                  {#if !personId || personId === people.personId}
-                    <div class="personFilterWrapper">
-                      <a href="/people/{people.personId}">
-                        <ImageThumbnail
-                          circle
-                          shadow
-                          url={api.getPeopleThumbnailUrl(people.personId)}
-                          altText={people.personName}
-                          title={`in ${people.albumCount} ${people.albumCount > 1 ? 'albums' : 'album'}`}
-                          widthStyle="3.375rem"
-                          heightStyle="3.375rem"
-                        />
-                      </a>
-                    </div>
-                  {/if}
-                {/each}
-              </div>
-            {/if}
-          </div>
             </section>
           {/if}
 
