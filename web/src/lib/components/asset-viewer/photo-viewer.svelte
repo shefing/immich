@@ -21,7 +21,8 @@
   let peopleFrameData: { imageHeight: 0; imageWidth: 0; x1: 0; x2: 0; y1: 0; y2: 0 };
   let copyImageToClipboard: (src: string) => Promise<Blob>;
   let canCopyImagesToClipboard: () => boolean;
-
+  let divWidth = 0,
+    divHeight = 0;
   onMount(async () => {
     // Import hack :( see https://github.com/vadimkorr/svelte-carousel/issues/27#issuecomment-851022295
     // TODO: Move to regular import once the package correctly supports ESM.
@@ -122,21 +123,27 @@
   export const handlePeopleHover = (ev: any) => {
     showpeopleFrame = true;
     peopleFrameData = ev.detail;
-    const { x1, x2, y1, y2, imageWidth, imageHeight } = peopleFrameData;
-    console.log('handlePeopleHover', peopleFrameData);
 
-    const halfWidth = (x2 - x1) / 2;
-    const halfHeight = (y2 - y1) / 2;
-    const middleX = Math.round(x1 + halfWidth);
-    const middleY = Math.round(y1 + halfHeight);
+    const { x1, x2, y1, y2, imageWidth, imageHeight } = peopleFrameData;
+    let widthRatio = divWidth / imageWidth;
+    let heightRatio = divHeight / imageHeight;
+
+    console.log('handlePeopleHover', peopleFrameData);
+    console.log('Height', divHeight);
+    console.log('Width', divWidth);
+
+    const halfWidth = (x2 * widthRatio - x1 * widthRatio) / 2;
+    const halfHeight = (y2 * heightRatio - y1 * heightRatio) / 2;
+    const middleX = Math.round(x1 * widthRatio + halfWidth);
+    const middleY = Math.round(y1 * heightRatio + halfHeight);
     // zoom out 10%
     const targetHalfSize = Math.floor(Math.max(halfWidth, halfHeight) * 1.1);
     // get the longest distance from the center of the image without overflowing
     const newHalfSize = Math.min(
       middleX - Math.max(0, middleX - targetHalfSize),
       middleY - Math.max(0, middleY - targetHalfSize),
-      Math.min(imageWidth - 1, middleX + targetHalfSize) - middleX,
-      Math.min(imageHeight - 1, middleY + targetHalfSize) - middleY,
+      Math.min(imageWidth * widthRatio - 1, middleX + targetHalfSize) - middleX,
+      Math.min(imageHeight * heightRatio - 1, middleY + targetHalfSize) - middleY,
     );
     cropOptions = {
       left: middleX - newHalfSize,
@@ -144,15 +151,12 @@
       width: newHalfSize * 2,
       height: newHalfSize * 2,
     };
-    // return sharp(input, { failOn: 'none' })
-    //   .pipelineColorspace('rgb16')
-    //   .extract({
-    //     left: options.left,
-    //     top: options.top,
-    //     width: options.width,
-    //     height: options.height,
-    //   })
-    //   .toBuffer();
+    // cropOptions = {
+    //   left: x1 * widthRatio,
+    //   top: y1 * heightRatio,
+    //   width: (x2 - x1) * widthRatio,
+    //   height: (y2 - y1) * heightRatio,
+    // };
   };
 </script>
 
@@ -166,7 +170,7 @@
   {#await loadAssetData({ loadOriginal: false })}
     <LoadingSpinner />
   {:then}
-    <div bind:this={imgElement} class="h-full w-full">
+    <div bind:this={imgElement} class="h-full w-full" bind:offsetWidth={divWidth} bind:offsetHeight={divHeight}>
       {#if showpeopleFrame}
         <div
           style={`position: absolute; border: solid 10px red; border-radius: 40px;
