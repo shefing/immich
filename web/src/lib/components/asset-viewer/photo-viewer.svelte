@@ -128,9 +128,9 @@
     let widthRatio = divWidth / imageWidth;
     let heightRatio = divHeight / imageHeight;
 
-    console.log('handlePeopleHover', peopleFrameData);
-    console.log('Height', divHeight);
-    console.log('Width', divWidth);
+    // console.log('handlePeopleHover', peopleFrameData);
+    // console.log('Height', divHeight);
+    // console.log('Width', divWidth);
 
     const halfWidth = (x2 * widthRatio - x1 * widthRatio) / 2;
     const halfHeight = (y2 * heightRatio - y1 * heightRatio) / 2;
@@ -151,12 +151,6 @@
       width: newHalfSize * 2,
       height: newHalfSize * 2,
     };
-    // cropOptions = {
-    //   left: x1 * widthRatio,
-    //   top: y1 * heightRatio,
-    //   width: (x2 - x1) * widthRatio,
-    //   height: (y2 - y1) * heightRatio,
-    // };
   };
 </script>
 
