@@ -118,10 +118,41 @@
     });
   }
 
+  let cropOptions: { top: any; left: any; height: any; width: any };
   export const handlePeopleHover = (ev: any) => {
     showpeopleFrame = true;
     peopleFrameData = ev.detail;
+    const { x1, x2, y1, y2, imageWidth, imageHeight } = peopleFrameData;
     console.log('handlePeopleHover', peopleFrameData);
+
+    const halfWidth = (x2 - x1) / 2;
+    const halfHeight = (y2 - y1) / 2;
+    const middleX = Math.round(x1 + halfWidth);
+    const middleY = Math.round(y1 + halfHeight);
+    // zoom out 10%
+    const targetHalfSize = Math.floor(Math.max(halfWidth, halfHeight) * 1.1);
+    // get the longest distance from the center of the image without overflowing
+    const newHalfSize = Math.min(
+      middleX - Math.max(0, middleX - targetHalfSize),
+      middleY - Math.max(0, middleY - targetHalfSize),
+      Math.min(imageWidth - 1, middleX + targetHalfSize) - middleX,
+      Math.min(imageHeight - 1, middleY + targetHalfSize) - middleY,
+    );
+    cropOptions = {
+      left: middleX - newHalfSize,
+      top: middleY - newHalfSize,
+      width: newHalfSize * 2,
+      height: newHalfSize * 2,
+    };
+    // return sharp(input, { failOn: 'none' })
+    //   .pipelineColorspace('rgb16')
+    //   .extract({
+    //     left: options.left,
+    //     top: options.top,
+    //     width: options.width,
+    //     height: options.height,
+    //   })
+    //   .toBuffer();
   };
 </script>
 
@@ -139,10 +170,10 @@
       {#if showpeopleFrame}
         <div
           style={`position: absolute; border: solid 10px red; border-radius: 40px;
-                  top:${peopleFrameData.y1}px;
-                  left:${peopleFrameData.x1 / 2}px;
-                  height:${peopleFrameData.imageHeight / 2}px;
-                  width:${peopleFrameData.imageWidth / 3}px;`}
+                  top:${cropOptions.top}px;
+                  left:${cropOptions.left}px;
+                  height:${cropOptions.height}px;
+                  width:${cropOptions.width}px;`}
         />
       {/if}
 
