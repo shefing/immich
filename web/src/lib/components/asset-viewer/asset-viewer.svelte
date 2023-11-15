@@ -733,6 +733,7 @@
     >
       <DetailPanel
         {asset}
+        albumId={album?.id}
         albums={appearsInAlbums}
         on:close={() => ($isShowDetail = false)}
         on:close-viewer={handleCloseViewer}
@@ -756,6 +757,7 @@
         albumOwnerId={album.ownerId}
         albumId={album.id}
         assetId={asset.id}
+        {isLiked}
         bind:reactions
         on:addComment={handleAddComment}
         on:deleteComment={handleRemoveComment}

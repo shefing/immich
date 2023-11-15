@@ -80,7 +80,8 @@ export const defaults = Object.freeze<SystemConfig>({
   },
   map: {
     enabled: true,
-    tileUrl: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    lightStyle: '',
+    darkStyle: '',
   },
   reverseGeocoding: {
     enabled: true,
@@ -327,7 +328,7 @@ export class SystemConfigCore {
         }
 
         if (!_.isEmpty(file)) {
-          throw new Error(`Unknown keys found: ${file}`);
+          throw new Error(`Unknown keys found: ${JSON.stringify(file)}`);
         }
 
         this.configCache = overrides;
